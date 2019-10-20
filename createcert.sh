@@ -26,16 +26,16 @@ if [ $# -le 0 ]; then
 else
 	while [ "$1" != "" ]; do
 		case $1 in
-			-p | --privatekey )		shift
+			-p | --privatekey )		                shift
 									name=$1
 									;;
-			-d | --dns 	)			shift
+			-d | --dns 	)			        shift
 									dns=$1
 									;;
-			-c | --ca 	)			shift
+			-c | --ca 	)			        shift
 									ca=$1
 									;;
-			-k | --CAkey 	)		shift
+			-k | --CAkey 	)		                shift
 									cakey=$1
 									;;
 			* )						usage

@@ -1,6 +1,6 @@
 usage()
 {
-	echo "usage: createcert [[p name][-d dns]]"
+	echo "usage: createcert.sh [[p name][-d dns][-c certification authority][-k certification authroity key]]"
 }
 
 createconfig()

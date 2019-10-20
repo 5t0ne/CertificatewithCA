@@ -1,6 +1,6 @@
 usage()
 {
-	echo "usage: createcert.sh [[p name][-d dns][-c certification authority][-k certification authroity key]]"
+	echo "usage: createcert.sh [[p name][-d list of SAN separated by ","][-c certification authority][-k certification authroity key]]"
 }
 
 createconfig()
@@ -12,8 +12,14 @@ keyUsage = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment
 subjectAltName = @alt_names
 
 [alt_names]
-DNS.1 = $dns
 Endofmessage
+
+	IFS="," read -ra dnsitems <<< "$dns"
+
+	for item in "${dnsitems[@]}"; do
+		count=`expr $count + 1`
+		echo "${dnsblock}DNS.${count} = ${item}" >> ${name}.ext
+	done
 }
 
 name=exampledomain
@@ -26,16 +32,16 @@ if [ $# -le 0 ]; then
 else
 	while [ "$1" != "" ]; do
 		case $1 in
-			-p | --privatekey )		                shift
+			-p | --privatekey )		shift
 									name=$1
 									;;
-			-d | --dns 	)			        shift
+			-d | --dns 	)			shift
 									dns=$1
 									;;
-			-c | --ca 	)			        shift
+			-c | --ca 	)			shift
 									ca=$1
 									;;
-			-k | --CAkey 	)		                shift
+			-k | --CAkey 	)		shift
 									cakey=$1
 									;;
 			* )						usage
@@ -44,6 +50,7 @@ else
 		shift
 	done
 fi
+
 if [ "$dns" != "" ]; then
 	createconfig
 else
@@ -63,3 +70,4 @@ if [ "$ca" != "" ] && [ "$cakey" != "" ]; then
 else
 	echo "Please provide a <myca>.pem via option -c and a <myca>.key via option -k."
 fi
+
